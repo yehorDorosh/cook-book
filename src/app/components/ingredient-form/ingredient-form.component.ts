@@ -8,10 +8,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './ingredient-form.component.scss',
 })
 export class IngredientFormComponent {
-  @Input() id = 0;
+  @Input() id!: string;
   @Output() ingredientInput = new EventEmitter<string>();
   @Output() valueInput = new EventEmitter<string>();
-  @Output() deleteBtn = new EventEmitter<number>();
+  @Output() deleteBtn = new EventEmitter<string>();
 
   onIngredientInput(event: Event) {
     const target = event.target as HTMLInputElement;

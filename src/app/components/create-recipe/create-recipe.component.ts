@@ -7,6 +7,7 @@ import {
 import { IngredientFormComponent } from '../ingredient-form/ingredient-form.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { type Ingredient } from '../ingredient-form/ingredient.model';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-create-recipe',
@@ -19,46 +20,35 @@ export class CreateRecipeComponent {
   ingredientsFormList!: ViewContainerRef;
 
   private ingredientRefs: {
-    id: number;
-    ref: ComponentRef<IngredientFormComponent>;
-  }[] = [];
-  ingredientsData: Ingredient[] = [];
-  private counter: number = 0;
+    [id: string]: ComponentRef<IngredientFormComponent>;
+  } = {};
+  ingredientsData: {
+    [key: string]: Ingredient;
+  } = {};
 
   addIngredientForm() {
+    const myuuid = uuidv4();
     const formRef = this.ingredientsFormList.createComponent(
       IngredientFormComponent
     );
-    formRef.setInput('id', this.counter);
+    formRef.setInput('id', myuuid);
 
-    this.ingredientsData[this.counter] = { ingredient: '', value: '' };
-    this.ingredientRefs.push({ id: this.counter, ref: formRef });
+    this.ingredientsData[myuuid] = { id: myuuid, name: '', value: '' };
+    this.ingredientRefs[myuuid] = formRef;
 
     formRef.instance.ingredientInput.subscribe((value: string) => {
-      this.ingredientsData[formRef.instance.id].ingredient = value;
+      this.ingredientsData[formRef.instance.id].name = value;
     });
 
     formRef.instance.valueInput.subscribe((value: string) => {
       this.ingredientsData[formRef.instance.id].value = value;
     });
 
-    formRef.instance.deleteBtn.subscribe((id: number) => {
-      // ✅ Находим индекс компонента в массиве
-      const index = this.ingredientRefs.findIndex((ref) => ref.id === id);
-
-      if (index !== -1) {
-        // Удаляем компонент из `ViewContainerRef`
-        this.ingredientRefs[index].ref.destroy();
-
-        // Удаляем данные ингредиента
-        this.ingredientsData.splice(id, 1);
-
-        // Удаляем ссылку из массива
-        this.ingredientRefs.splice(index, 1);
-      }
+    formRef.instance.deleteBtn.subscribe((id: string) => {
+      this.ingredientRefs[id].destroy();
+      delete this.ingredientsData[id];
+      delete this.ingredientRefs[id];
     });
-
-    this.counter++;
   }
 
   submit(formData: NgForm) {
