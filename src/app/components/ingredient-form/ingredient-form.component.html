@@ -1,4 +1,4 @@
-<form>
+<form class="form">
   <div class="form-group">
     <label [for]="'ingredient' + id">Ingredient</label>
     <input
@@ -20,4 +20,5 @@
       (change)="onValueInput($event)"
     />
   </div>
+  <button type="button" class="btn btn-danger" (click)="onDelete($event)">Delete</button>
 </form>

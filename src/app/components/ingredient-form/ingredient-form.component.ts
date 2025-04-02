@@ -11,6 +11,7 @@ export class IngredientFormComponent {
   @Input() id = 0;
   @Output() ingredientInput = new EventEmitter<string>();
   @Output() valueInput = new EventEmitter<string>();
+  @Output() deleteBtn = new EventEmitter<number>();
 
   onIngredientInput(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -24,5 +25,9 @@ export class IngredientFormComponent {
     if (target) {
       this.valueInput.emit(target.value)
     }
+  }
+
+  onDelete(event: Event) {
+    this.deleteBtn.emit(this.id)
   }
 }
