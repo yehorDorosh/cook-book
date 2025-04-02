@@ -1,1 +1,17 @@
-<p>create-recipe works!</p>
+<form #form="ngForm" (ngSubmit)="submit(form)">
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="title" placeholder="Title" name="title" ngModel/>
+  </div>
+
+  <ng-container #ingredientsFormList></ng-container>
+
+  <button type="button" class="btn btn-primary" (click)="addIngredientForm()">Add ingredient</button>
+
+  <div class="form-group">
+    <label for="recipe">Recipe</label>
+    <textarea class="form-control" rows="5" id="recipe" name="recipe" ngModel></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
