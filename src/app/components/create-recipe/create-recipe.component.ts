@@ -42,40 +42,26 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   addIngredientForm(ingredient: Ingredient) {
-    const myuuid = uuidv4();
-    const formRef = this.ingredientsFormList.createComponent(
-      IngredientFormComponent
-    );
-    formRef.setInput('id', myuuid);
+    const { formRef, uuid} = this.registerIngredient()
+
     formRef.setInput('ingredient', ingredient);
-
-    this.ingredientsData[myuuid] = { ...ingredient, id: myuuid };
-    this.ingredientRefs[myuuid] = formRef;
-
-    formRef.instance.ingredientInput.subscribe((value: string) => {
-      this.ingredientsData[formRef.instance.id].name = value;
-    });
-
-    formRef.instance.valueInput.subscribe((value: string) => {
-      this.ingredientsData[formRef.instance.id].value = value;
-    });
-
-    formRef.instance.deleteBtn.subscribe((id: string) => {
-      this.ingredientRefs[id].destroy();
-      delete this.ingredientsData[id];
-      delete this.ingredientRefs[id];
-    });
+    this.ingredientsData[uuid] = { ...ingredient, id: uuid };
   }
 
   addNewIngredientForm() {
-    const myuuid = uuidv4();
+    const { formRef, uuid} = this.registerIngredient()
+
+    this.ingredientsData[uuid] = { id: uuid, name: '', value: '' };
+  }
+
+  registerIngredient() {
+    const uuid = uuidv4();
     const formRef = this.ingredientsFormList.createComponent(
       IngredientFormComponent
     );
-    formRef.setInput('id', myuuid);
+    formRef.setInput('id', uuid);
 
-    this.ingredientsData[myuuid] = { id: myuuid, name: '', value: '' };
-    this.ingredientRefs[myuuid] = formRef;
+    this.ingredientRefs[uuid] = formRef;
 
     formRef.instance.ingredientInput.subscribe((value: string) => {
       this.ingredientsData[formRef.instance.id].name = value;
@@ -90,6 +76,11 @@ export class CreateRecipeComponent implements OnInit {
       delete this.ingredientsData[id];
       delete this.ingredientRefs[id];
     });
+
+    return {
+      uuid,
+      formRef
+    };
   }
 
   submit(formData: NgForm) {
