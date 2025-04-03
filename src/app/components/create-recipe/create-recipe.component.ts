@@ -7,16 +7,16 @@ import {
 } from '@angular/core';
 import { IngredientFormComponent } from '../ingredient-form/ingredient-form.component';
 import { FormsModule, NgForm } from '@angular/forms';
-import { type Ingredient } from '../ingredient-form/ingredient.model';
+import { Unit, type Ingredient } from '../ingredient-form/ingredient.model';
 import { v4 as uuidv4 } from 'uuid';
 
 const INGREDIENTS_FROM_API: {
   [id: string]: Ingredient;
 } = {
-  '1': { id: '1', name: 'Sugar', value: '100g' },
-  '2': { id: '2', name: 'Flour', value: '200g' },
-  '3': { id: '3', name: 'Eggs', value: '2' },
-}
+  '1': { id: '1', name: 'Sugar', amount: { value: 2, unit: 'tsp' } },
+  '2': { id: '2', name: 'Eggs', amount: { value: 1, unit: 'pcs' } },
+  '3': { id: '3', name: 'Milk', amount: { value: 1, unit: 'cup' } },
+};
 
 @Component({
   selector: 'app-create-recipe',
@@ -42,16 +42,20 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   addIngredientForm(ingredient: Ingredient) {
-    const { formRef, uuid} = this.registerIngredient()
+    const { formRef, uuid } = this.registerIngredient();
 
     formRef.setInput('ingredient', ingredient);
     this.ingredientsData[uuid] = { ...ingredient, id: uuid };
   }
 
   addNewIngredientForm() {
-    const { formRef, uuid} = this.registerIngredient()
+    const { formRef, uuid } = this.registerIngredient();
 
-    this.ingredientsData[uuid] = { id: uuid, name: '', value: '' };
+    this.ingredientsData[uuid] = {
+      id: uuid,
+      name: '',
+      amount: { value: 0, unit: 'other' },
+    };
   }
 
   registerIngredient() {
@@ -68,7 +72,11 @@ export class CreateRecipeComponent implements OnInit {
     });
 
     formRef.instance.valueInput.subscribe((value: string) => {
-      this.ingredientsData[formRef.instance.id].value = value;
+      this.ingredientsData[formRef.instance.id].amount.value = +value;
+    });
+
+    formRef.instance.unitSelect.subscribe((value: Unit) => {
+      this.ingredientsData[formRef.instance.id].amount.unit = value;
     });
 
     formRef.instance.deleteBtn.subscribe((id: string) => {
@@ -79,7 +87,7 @@ export class CreateRecipeComponent implements OnInit {
 
     return {
       uuid,
-      formRef
+      formRef,
     };
   }
 
