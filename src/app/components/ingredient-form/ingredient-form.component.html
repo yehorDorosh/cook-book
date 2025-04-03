@@ -2,6 +2,7 @@
   <div class="form-group">
     <label [for]="'ingredient' + id">Ingredient</label>
     <input
+      #ingredietnInputRef
       type="text"
       class="form-control"
       [id]="'ingredient' + id"
@@ -13,6 +14,7 @@
   <div class="form-group">
     <label [for]="'value' + id">Ingredient</label>
     <input
+      #valueInputRef
       type="text"
       class="form-control"
       [id]="'value' + id"
@@ -20,5 +22,7 @@
       (change)="onValueInput($event)"
     />
   </div>
-  <button type="button" class="btn btn-danger" (click)="onDelete($event)">Delete</button>
+  <button type="button" class="btn btn-danger" (click)="onDelete($event)">
+    Delete
+  </button>
 </form>
