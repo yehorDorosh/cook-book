@@ -9,6 +9,8 @@ import { IngredientFormComponent } from '../ingredient-form/ingredient-form.comp
 import { FormsModule, NgForm } from '@angular/forms';
 import { Unit, type Ingredient } from '../ingredient-form/ingredient.model';
 import { v4 as uuidv4 } from 'uuid';
+import { RecipeStepperComponent } from '../recipe-stepper/recipe-stepper.component';
+import { Step } from './recipe.model';
 
 const INGREDIENTS_FROM_API: {
   [id: string]: Ingredient;
@@ -28,12 +30,18 @@ export class CreateRecipeComponent implements OnInit {
   @ViewChild('ingredientsFormList', { read: ViewContainerRef, static: true })
   ingredientsFormList!: ViewContainerRef;
 
+  @ViewChild('stepper', { read: ViewContainerRef, static: true })
+  stepper!: ViewContainerRef;
+
   private ingredientRefs: {
     [id: string]: ComponentRef<IngredientFormComponent>;
   } = {};
-  ingredientsData: {
+  private ingredientsData: {
     [id: string]: Ingredient;
   } = {};
+
+  private stepsRefs: (ComponentRef<RecipeStepperComponent> | undefined)[] = [];
+  private stepsData: (Step | undefined)[] = [];
 
   ngOnInit(): void {
     for (const key in INGREDIENTS_FROM_API) {
@@ -91,10 +99,60 @@ export class CreateRecipeComponent implements OnInit {
     };
   }
 
+  addNewStep() {
+    this.registerStep();
+  }
+
+  registerStep(number?: number) {
+    const lastFreeIndex = number ?? this.stepsRefs.length;
+    const stepRef = this.stepper.createComponent(RecipeStepperComponent);
+    // Insert the new component at the desired index
+    if (number) this.stepper.insert(stepRef.hostView, number);
+    stepRef.setInput('number', lastFreeIndex);
+
+    this.stepsRefs[lastFreeIndex] = stepRef;
+
+    stepRef.instance.onChangeData.subscribe((step: Step) => {
+      this.stepsData[step.number] = step;
+    });
+
+    stepRef.instance.addStep.subscribe((newNumber: number) => {
+      if (this.stepsRefs[newNumber]) {
+        this.stepsRefs.splice(newNumber, 0, undefined);
+        this.stepsData.splice(newNumber, 0, undefined);
+        this.registerStep(newNumber);
+
+        for (let i = newNumber + 1; i < this.stepsRefs.length; i++) {
+          this.stepsRefs[i]?.setInput('number', i);
+          if (typeof this.stepsData[i] === 'object')
+            this.stepsData[i]!.number = i;
+        }
+      } else {
+        this.registerStep(newNumber);
+      }
+    });
+
+    stepRef.instance.deleteBtn.subscribe((number: number) => {
+      this.stepsRefs[number]?.destroy();
+      this.stepsData.splice(number, 1);
+      this.stepsRefs.splice(number, 1);
+
+      this.stepsRefs.forEach((stepRef, i) => {
+        stepRef?.setInput('number', i);
+        if (this.stepsData[i]) this.stepsData[i].number = i;
+      });
+    });
+
+    return {
+      lastFreeIndex,
+      stepRef,
+    };
+  }
+
   submit(formData: NgForm) {
     console.log(formData.form.value.title);
-    console.log(formData.form.value.recipe);
 
     console.log(this.ingredientsData);
+    console.log(this.stepsData);
   }
 }
