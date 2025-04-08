@@ -1,6 +1,7 @@
 import {
   Component,
   ComponentRef,
+  Input,
   OnInit,
   ViewChild,
   ViewContainerRef,
@@ -10,15 +11,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Unit, type Ingredient } from '../ingredient-form/ingredient.model';
 import { v4 as uuidv4 } from 'uuid';
 import { RecipeStepperComponent } from '../recipe-stepper/recipe-stepper.component';
-import { Step } from './recipe.model';
-
-const INGREDIENTS_FROM_API: {
-  [id: string]: Ingredient;
-} = {
-  '1': { id: '1', name: 'Sugar', amount: { value: 2, unit: 'tsp' } },
-  '2': { id: '2', name: 'Eggs', amount: { value: 1, unit: 'pcs' } },
-  '3': { id: '3', name: 'Milk', amount: { value: 1, unit: 'cup' } },
-};
+import { Recipe, Step } from './recipe.model';
 
 @Component({
   selector: 'app-create-recipe',
@@ -43,9 +36,23 @@ export class CreateRecipeComponent implements OnInit {
   private stepsRefs: (ComponentRef<RecipeStepperComponent> | undefined)[] = [];
   private stepsData: (Step | undefined)[] = [];
 
+  @Input() recipe?: Recipe;
+
+  recipeTitleInput = '';
+
   ngOnInit(): void {
-    for (const key in INGREDIENTS_FROM_API) {
-      this.addIngredientForm(INGREDIENTS_FROM_API[key]);
+    if (this.recipe) {
+      for (const key in this.recipe.ingredients) {
+        this.addIngredientForm(this.recipe.ingredients[key]);
+      }
+
+      this.recipeTitleInput = this.recipe.title;
+      this.recipe.steps.forEach((step) => {
+        this.registerStep(step.number);
+        this.stepsRefs[step.number]?.setInput('title', step.title);
+        this.stepsRefs[step.number]?.setInput('description', step.description);
+        this.stepsData[step.number] = step;
+      });
     }
   }
 
@@ -106,8 +113,10 @@ export class CreateRecipeComponent implements OnInit {
   registerStep(number?: number) {
     const lastFreeIndex = number ?? this.stepsRefs.length;
     const stepRef = this.stepper.createComponent(RecipeStepperComponent);
+
     // Insert the new component at the desired index
     if (number) this.stepper.insert(stepRef.hostView, number);
+
     stepRef.setInput('number', lastFreeIndex);
 
     this.stepsRefs[lastFreeIndex] = stepRef;
@@ -150,7 +159,7 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   submit(formData: NgForm) {
-    console.log(formData.form.value.title);
+    console.log(this.recipeTitleInput);
 
     console.log(this.ingredientsData);
     console.log(this.stepsData);

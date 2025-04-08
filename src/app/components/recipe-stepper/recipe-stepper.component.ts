@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -15,11 +16,18 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './recipe-stepper.component.html',
   styleUrl: './recipe-stepper.component.scss',
 })
-export class RecipeStepperComponent {
+export class RecipeStepperComponent implements OnInit {
   @Input() number: number = 0;
+  @Input() title: string = '';
+  @Input() description: string = '';
   @Output() onChangeData = new EventEmitter<Step>();
   @Output() deleteBtn = new EventEmitter<number>();
   @Output() addStep = new EventEmitter<number>();
+
+  ngOnInit(): void {
+    this.titleInput = this.title;
+    this.descriptionInput = this.description;
+  }
 
   titleInput = '';
   descriptionInput = '';
