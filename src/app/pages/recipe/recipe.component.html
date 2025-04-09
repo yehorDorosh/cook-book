@@ -1,0 +1,21 @@
+<app-layout-main>
+  <h1>{{ recipesAPI[recipeId].title }}</h1>
+
+  <h2>Ingredients:</h2>
+  <ul>
+    <li *ngFor="let ingredient of ingredientsList">
+      <p>
+        {{ ingredient.name }} - {{ ingredient.amount.value
+        }}{{ ingredient.amount.unit }}
+      </p>
+    </li>
+  </ul>
+
+  <h2>Recipe:</h2>
+  <ul>
+    <li *ngFor="let step of recipesAPI[recipeId].steps">
+      <h3>{{ step.number + 1 }}. {{ step.title }}</h3>
+      <p>{{ step.description }}</p>
+    </li>
+  </ul>
+</app-layout-main>
