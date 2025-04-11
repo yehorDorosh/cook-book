@@ -1,8 +1,10 @@
 import {
   Component,
   ComponentRef,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -12,6 +14,7 @@ import { Unit, type Ingredient } from '../ingredient-form/ingredient.model';
 import { v4 as uuidv4 } from 'uuid';
 import { RecipeStepperComponent } from '../recipe-stepper/recipe-stepper.component';
 import { Recipe, Step } from './recipe.model';
+import api from '../../utils/api';
 
 @Component({
   selector: 'app-create-recipe',
@@ -25,6 +28,8 @@ export class CreateRecipeComponent implements OnInit {
 
   @ViewChild('stepper', { read: ViewContainerRef, static: true })
   stepper!: ViewContainerRef;
+
+  @Output() onSubmit = new EventEmitter<Recipe>();
 
   private ingredientRefs: {
     [id: string]: ComponentRef<IngredientFormComponent>;
@@ -160,8 +165,24 @@ export class CreateRecipeComponent implements OnInit {
 
   submit(formData: NgForm) {
     console.log(this.recipeTitleInput);
-
     console.log(this.ingredientsData);
     console.log(this.stepsData);
+
+    const recipe: Recipe = {
+      title: this.recipeTitleInput,
+      ingredients: this.ingredientsData,
+      steps: this.stepsData.filter((step) => !!step),
+    };
+
+    if (this.recipe) {
+      recipe.id = this.recipe.id;
+      this.recipe = { ...recipe };
+    } else {
+      recipe.id = uuidv4();
+    }
+
+    api.saveRecipe(recipe.id!, recipe, () => {
+      this.onSubmit.emit(recipe);
+    });
   }
 }
