@@ -1,5 +1,17 @@
-<ul>
-  <li *ngFor="let recipe of recipesFlat">
-    <a [routerLink]="`recipe/${recipe.id}`">{{ recipe.title }}</a>
-  </li>
-</ul>
+<div *ngIf="recipesFlat.length" class="card">
+  <h2>Recipies</h2>
+  <ul>
+    <li *ngFor="let recipe of recipesFlat">
+      <div class="checkbox">
+        <label>
+          <input
+            class=""
+            type="checkbox"
+            (change)="onCheck($event, recipe.id!)"
+          />
+          <a [routerLink]="`recipe/${recipe.id}`">{{ recipe.title }}</a>
+        </label>
+      </div>
+    </li>
+  </ul>
+</div>

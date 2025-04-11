@@ -1,3 +1,8 @@
 <app-layout-main>
-  <app-recipes-list [list]="recipesAPI"></app-recipes-list>
+  <app-recipes-list
+    [list]="recipesAPI"
+    (onAddIngredientsToList)="onAddIngredientsToList($event)"
+  ></app-recipes-list>
+
+  <app-shop-list [checkedList]="checkedList"></app-shop-list>
 </app-layout-main>
