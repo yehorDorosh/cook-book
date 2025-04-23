@@ -1,5 +1,9 @@
 # CookBook
 
+## Host
+
+`https://cook-book-647da.web.app/`
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.5.
 
 ## Development server

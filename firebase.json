@@ -1,0 +1,12 @@
+{
+  "hosting": {
+    "public": "dist/cook-book/browser",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "/secure"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
