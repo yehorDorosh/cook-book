@@ -4,10 +4,16 @@ import { RecipesListComponent } from '../../components/recipes-list/recipes-list
 import { API_MOCKS } from '../../utils/mocks/api';
 import { type Recipe } from '../../components/create-recipe/recipe.model';
 import { ShopListComponent } from '../../components/shop-list/shop-list.component';
+import { LoginFormComponent } from '../../components/auth/login-form/login-form.component';
 
 @Component({
   selector: 'app-home',
-  imports: [LayoutMainComponent, RecipesListComponent, ShopListComponent],
+  imports: [
+    LayoutMainComponent,
+    RecipesListComponent,
+    ShopListComponent,
+    LoginFormComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
