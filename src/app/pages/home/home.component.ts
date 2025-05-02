@@ -5,6 +5,7 @@ import { API_MOCKS } from '../../utils/mocks/api';
 import { type Recipe } from '../../components/create-recipe/recipe.model';
 import { ShopListComponent } from '../../components/shop-list/shop-list.component';
 import { LoginFormComponent } from '../../components/auth/login-form/login-form.component';
+import { RecipeService } from '../../services/recipe.service';
 
 @Component({
   selector: 'app-home',
@@ -18,14 +19,17 @@ import { LoginFormComponent } from '../../components/auth/login-form/login-form.
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
-  recipesAPI: { [key: string]: Recipe } = {};
   checkedList: { [key: string]: Recipe } = {};
 
-  ngOnInit(): void {
-    this.recipesAPI = API_MOCKS.RECIPES_FROM_API;
-  }
+  constructor(private recipeService: RecipeService) {}
+
+  ngOnInit(): void {}
 
   onAddIngredientsToList(checkedList: { [key: string]: Recipe }) {
     this.checkedList = { ...checkedList };
+  }
+
+  get recipes() {
+    return this.recipeService.recipes || {};
   }
 }

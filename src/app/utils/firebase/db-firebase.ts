@@ -7,6 +7,7 @@ import {
   child,
   DatabaseReference,
 } from 'firebase/database';
+import { AppError } from '../errors.model';
 
 class DbFirebase {
   private static instance: DbFirebase;
@@ -32,10 +33,19 @@ class DbFirebase {
     });
   }
 
-  getData() {
-    get(child(this.dbRef, 'recipe/')).then((snapshot) => {
-      console.log(snapshot.val());
-    });
+  getData<T>(endpoint: string) {
+    return get(child(this.dbRef, endpoint))
+      .then((snapshot) => {
+        return snapshot.val() as T;
+      })
+      .catch((error) => {
+        console.log('Get data error: ', error.message);
+        return {
+          type: 'AppError',
+          message: 'Get data error: ' + error.message,
+          errorType: 'Network Error',
+        } as AppError;
+      });
   }
 }
 

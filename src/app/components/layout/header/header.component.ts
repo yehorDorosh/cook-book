@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import auth from '../../../utils/firebase/auth-firebase';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -9,7 +9,9 @@ import auth from '../../../utils/firebase/auth-firebase';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  constructor(private userService: UserService) {}
+
   onLogout() {
-    auth.logOut();
+    this.userService.logOut();
   }
 }

@@ -1,7 +1,7 @@
 <app-layout-main>
   <app-login-form></app-login-form>
   <app-recipes-list
-    [list]="recipesAPI"
+    [list]="recipes"
     (onAddIngredientsToList)="onAddIngredientsToList($event)"
   ></app-recipes-list>
 

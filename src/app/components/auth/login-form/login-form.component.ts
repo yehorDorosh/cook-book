@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import auth from '../../../utils/firebase/auth-firebase';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-login-form',
@@ -9,10 +9,12 @@ import auth from '../../../utils/firebase/auth-firebase';
   styleUrl: './login-form.component.scss',
 })
 export class LoginFormComponent {
+  constructor(private userSevice: UserService) {}
+
   onSubmit(formData: NgForm) {
     if (formData.valid) {
       const { email, password } = formData.value;
-      auth.signIn(email, password);
+      this.userSevice.logIn(email, password);
     }
   }
 }

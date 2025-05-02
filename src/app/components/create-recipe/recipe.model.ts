@@ -12,3 +12,7 @@ export interface Step {
   title: string;
   description: string;
 }
+
+export interface RecipeResponse {
+  [id: string]: Recipe;
+}
