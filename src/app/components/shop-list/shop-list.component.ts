@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Recipe } from '../create-recipe/recipe.model';
-import { Ingredient } from '../ingredient-form/ingredient.model';
+import { Ingredient, units } from '../ingredient-form/ingredient.model';
 import { NgFor, NgIf } from '@angular/common';
 
 @Component({
@@ -26,8 +26,15 @@ export class ShopListComponent implements OnChanges {
         for (const ingredientId in recipe.ingredients) {
           const ingredient = recipeList[recipeId].ingredients[ingredientId];
 
-          if (ingredientId in this.shopList) {
-            this.shopList[ingredientId].amount.value += ingredient.amount.value;
+          const matchIngredient = Object.values(this.shopList).find(
+            (_) => ingredient.name === _.name
+          );
+
+          if (
+            matchIngredient &&
+            matchIngredient.amount.unit === ingredient.amount.unit
+          ) {
+            matchIngredient.amount.value += ingredient.amount.value;
           } else {
             this.shopList[ingredientId] = structuredClone(ingredient);
           }
@@ -37,6 +44,8 @@ export class ShopListComponent implements OnChanges {
   }
 
   get shopListFlat() {
-    return Object.values(this.shopList);
+    return Object.values(this.shopList).sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
   }
 }
