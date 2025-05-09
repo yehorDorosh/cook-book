@@ -25,3 +25,7 @@ export const units: Unit[] = [
   'pinch',
   'other',
 ];
+
+export interface IngredientsResponse {
+  [id: string]: Ingredient;
+}

@@ -10,6 +10,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { type Ingredient, type Unit, units } from './ingredient.model';
 import { NgFor } from '@angular/common';
+import { RecipeService } from '../../services/recipe.service';
 
 @Component({
   selector: 'app-ingredient-form',
@@ -27,6 +28,7 @@ export class IngredientFormComponent implements OnInit {
 
   units = units;
   defaultUnit = 'other';
+  matchedIngredients: Ingredient[] | null = null;
 
   @ViewChild('ingredietnInputRef', { static: true })
   private ingredietnInputRef!: ElementRef<HTMLInputElement>;
@@ -34,6 +36,8 @@ export class IngredientFormComponent implements OnInit {
   private valueInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild('unitSelectRef', { static: true })
   private unitSelectRef!: ElementRef<HTMLSelectElement>;
+
+  constructor(private recipeService: RecipeService) {}
 
   ngOnInit(): void {
     if (this.ingredient) {
@@ -49,7 +53,23 @@ export class IngredientFormComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target) {
       this.ingredientInput.emit(target.value);
+      this.matchedIngredients = this.matchIngredient(target.value);
     }
+  }
+
+  matchIngredient(input: string) {
+    const ingredientsGlobal = this.recipeService.ingredientsGlobal;
+    if (!ingredientsGlobal) return null;
+
+    const ingredientList = Object.values(ingredientsGlobal);
+
+    const filtered = ingredientList.filter((ingredient) => {
+      const regex = new RegExp(`^${input}`, 'i');
+      return regex.test(ingredient.name);
+    });
+
+    if (filtered.length) return filtered;
+    else return null;
   }
 
   onValueInput(event: Event) {

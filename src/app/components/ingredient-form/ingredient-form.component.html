@@ -4,11 +4,17 @@
     <input
       #ingredietnInputRef
       type="text"
-      class="form-control"
+      class="form-control custom-select custom-select-sm"
       [id]="'ingredient' + id"
       placeholder="Ingredient"
-      (change)="onIngredientInput($event)"
+      (input)="onIngredientInput($event)"
+      [attr.list]="'ingredient' + id.split('-')[0]"
     />
+    <datalist [id]="'ingredient' + id.split('-')[0]">
+      <option *ngFor="let recipe of matchedIngredients" [value]="recipe.name">
+        {{ recipe.name }}
+      </option>
+    </datalist>
   </div>
 
   <div class="form-group">

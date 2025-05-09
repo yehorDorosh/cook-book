@@ -7,6 +7,7 @@ import {
 import { isAppError } from '../utils/errors.model';
 import { UserService } from './user.service';
 import { Endpoints } from '../utils/firebase/api.model';
+import { IngredientsResponse } from '../components/ingredient-form/ingredient.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,5 +44,19 @@ export class RecipeService {
     if (cb) {
       cb();
     }
+  }
+
+  get ingredientsGlobal() {
+    if (this.recipes) {
+      const ingredientsGlobal: IngredientsResponse = {};
+
+      for (const recipeId in this.recipes) {
+        const recipe = this.recipes[recipeId];
+        Object.assign(ingredientsGlobal, recipe.ingredients);
+      }
+
+      return ingredientsGlobal;
+    }
+    return null;
   }
 }
