@@ -1,32 +1,38 @@
 <app-layout-main>
-  <div *ngIf="!editState; else editor">
-    <h1>{{ recipesAPI[recipeId].title }}</h1>
-    <h2>Ingredients:</h2>
-    <ul>
-      <li *ngFor="let ingredient of ingredientsList">
-        <p>
-          {{ ingredient.name }} - {{ ingredient.amount.value
-          }}{{ ingredient.amount.unit }}
-        </p>
-      </li>
-    </ul>
-    <h2>Recipe:</h2>
-    <ul>
-      <li *ngFor="let step of recipesAPI[recipeId].steps">
-        <h3>{{ step.number + 1 }}. {{ step.title }}</h3>
-        <p>{{ step.description }}</p>
-      </li>
-    </ul>
+  <div *ngIf="recipes; else warning">
+    <div *ngIf="!editState; else editor">
+      <h1>{{ recipes[recipeId].title }}</h1>
+      <h2>Ingredients:</h2>
+      <ul>
+        <li *ngFor="let ingredient of ingredientsList">
+          <p>
+            {{ ingredient.name }} - {{ ingredient.amount.value
+            }}{{ ingredient.amount.unit }}
+          </p>
+        </li>
+      </ul>
+      <h2>Recipe:</h2>
+      <ul>
+        <li *ngFor="let step of recipes[recipeId].steps">
+          <h3>{{ step.number + 1 }}. {{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+        </li>
+      </ul>
+    </div>
+
+    <ng-template #editor>
+      <app-create-recipe
+        [recipe]="recipes[recipeId]"
+        (onSubmit)="onEdit()"
+      ></app-create-recipe>
+    </ng-template>
+
+    <button class="btn btn-primary" (click)="onEditClick()">
+      {{ editState ? "Cancel" : "Edit" }}
+    </button>
   </div>
 
-  <ng-template #editor>
-    <app-create-recipe
-      [recipe]="recipesAPI[recipeId]"
-      (onSubmit)="editState = false"
-    ></app-create-recipe>
+  <ng-template #warning>
+    <p>Loading...</p>
   </ng-template>
-
-  <button class="btn btn-primary" (click)="onEdit()">
-    {{ editState ? "Cancel" : "Edit" }}
-  </button>
 </app-layout-main>

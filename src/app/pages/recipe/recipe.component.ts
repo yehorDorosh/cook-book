@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { API_MOCKS } from '../../utils/mocks/api';
-import { type Recipe } from '../../components/create-recipe/recipe.model';
 import { LayoutMainComponent } from '../../components/layout/layout-main/layout-main.component';
 import { NgFor, NgIf } from '@angular/common';
 import { CreateRecipeComponent } from '../../components/create-recipe/create-recipe.component';
+import { RecipeService } from '../../services/recipe.service';
 
 @Component({
   selector: 'app-recipe',
@@ -13,18 +12,26 @@ import { CreateRecipeComponent } from '../../components/create-recipe/create-rec
 })
 export class RecipeComponent {
   @Input() recipeId!: string;
-  recipesAPI: { [key: string]: Recipe } = {};
   editState = false;
 
-  ngOnInit(): void {
-    this.recipesAPI = API_MOCKS.RECIPES_FROM_API;
-  }
+  constructor(private recipeService: RecipeService) {}
 
   get ingredientsList() {
-    return Object.values(this.recipesAPI[this.recipeId].ingredients);
+    if (this.recipes) {
+      return Object.values(this.recipes[this.recipeId].ingredients);
+    }
+    return null;
+  }
+
+  onEditClick() {
+    this.editState = !this.editState;
+  }
+
+  get recipes() {
+    return this.recipeService.recipes;
   }
 
   onEdit() {
-    this.editState = !this.editState;
+    this.editState = false;
   }
 }

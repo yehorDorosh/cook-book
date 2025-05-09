@@ -14,7 +14,7 @@ import { Unit, type Ingredient } from '../ingredient-form/ingredient.model';
 import { v4 as uuidv4 } from 'uuid';
 import { RecipeStepperComponent } from '../recipe-stepper/recipe-stepper.component';
 import { Recipe, Step } from './recipe.model';
-import api from '../../utils/api';
+import { RecipeService } from '../../services/recipe.service';
 
 @Component({
   selector: 'app-create-recipe',
@@ -44,6 +44,8 @@ export class CreateRecipeComponent implements OnInit {
   @Input() recipe?: Recipe;
 
   recipeTitleInput = '';
+
+  constructor(private recipeSevice: RecipeService) {}
 
   ngOnInit(): void {
     if (this.recipe) {
@@ -181,7 +183,7 @@ export class CreateRecipeComponent implements OnInit {
       recipe.id = uuidv4();
     }
 
-    api.saveRecipe(recipe.id!, recipe, () => {
+    this.recipeSevice.createRecipe(recipe, recipe.id, () => {
       this.onSubmit.emit(recipe);
     });
   }

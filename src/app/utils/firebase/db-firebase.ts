@@ -27,14 +27,31 @@ class DbFirebase {
     return DbFirebase.instance;
   }
 
-  sendData() {
-    set(ref(this.db, 'recipe/' + 'xxx1234'), {
-      title: 'soup',
-    });
+  sendData(
+    endpoint: string,
+    data: Record<string, any>,
+    id?: string,
+    cb?: () => void
+  ) {
+    const errorHandler = (error: any) => {
+      console.log('Send data error: ', error.message);
+      return {
+        type: 'AppError',
+        message: 'Send data error: ' + error.message,
+        errorType: 'Network Error',
+      } as AppError;
+    };
+    if (id) {
+      set(ref(this.db, endpoint + '/' + id), data)
+        .then(cb)
+        .catch(errorHandler);
+    } else {
+      set(ref(this.db, endpoint), data).then(cb).catch(errorHandler);
+    }
   }
 
   getData<T>(endpoint: string) {
-    return get(child(this.dbRef, endpoint))
+    return get(child(this.dbRef, endpoint + '/'))
       .then((snapshot) => {
         return snapshot.val() as T;
       })
