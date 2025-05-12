@@ -6,6 +6,6 @@
     </ul>
   </nav>
   <div>
-    <button (click)="onLogout()">Logout</button>
+    <button *ngIf="isLoggedIn" (click)="onLogout()">Logout</button>
   </div>
 </header>

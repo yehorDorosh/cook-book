@@ -6,6 +6,8 @@ import { type Recipe } from '../../components/create-recipe/recipe.model';
 import { ShopListComponent } from '../../components/shop-list/shop-list.component';
 import { LoginFormComponent } from '../../components/auth/login-form/login-form.component';
 import { RecipeService } from '../../services/recipe.service';
+import { UserService } from '../../services/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +16,7 @@ import { RecipeService } from '../../services/recipe.service';
     RecipesListComponent,
     ShopListComponent,
     LoginFormComponent,
+    CommonModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -21,7 +24,10 @@ import { RecipeService } from '../../services/recipe.service';
 export class HomeComponent implements OnInit {
   checkedList: { [key: string]: Recipe } = {};
 
-  constructor(private recipeService: RecipeService) {}
+  constructor(
+    private recipeService: RecipeService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -31,5 +37,9 @@ export class HomeComponent implements OnInit {
 
   get recipes() {
     return this.recipeService.recipes || {};
+  }
+
+  get isLoggedIn() {
+    return this.userService.user !== null;
   }
 }

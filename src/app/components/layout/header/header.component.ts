@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../../../services/user.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink],
+  imports: [RouterLink, NgIf],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -13,5 +14,9 @@ export class HeaderComponent {
 
   onLogout() {
     this.userService.logOut();
+  }
+
+  get isLoggedIn() {
+    return this.userService.user !== null;
   }
 }

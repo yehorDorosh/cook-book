@@ -1,5 +1,5 @@
 <app-layout-main>
-  <app-login-form></app-login-form>
+  <app-login-form *ngIf="!isLoggedIn"></app-login-form>
   <app-recipes-list
     [list]="recipes"
     (onAddIngredientsToList)="onAddIngredientsToList($event)"
