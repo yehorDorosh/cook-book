@@ -46,6 +46,16 @@ export class RecipeService {
     }
   }
 
+  deleteRecipe(id: string, cb?: () => void) {
+    db.deleteData(Endpoints.recipes, id, () => {
+      this.getRecipes();
+    });
+
+    if (cb) {
+      cb();
+    }
+  }
+
   get ingredientsGlobal() {
     if (this.recipes) {
       const ingredientsGlobal: IngredientsResponse = {};

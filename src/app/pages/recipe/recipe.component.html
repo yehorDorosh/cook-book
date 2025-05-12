@@ -27,9 +27,14 @@
       ></app-create-recipe>
     </ng-template>
 
-    <button class="btn btn-primary" (click)="onEditClick()">
-      {{ editState ? "Cancel" : "Edit" }}
-    </button>
+    <div class="btns">
+      <button type="button" class="btn btn-primary" (click)="onEditClick()">
+        {{ editState ? "Cancel" : "Edit" }}
+      </button>
+      <button type="button" class="btn btn-danger" (click)="onDelete()">
+        Delete
+      </button>
+    </div>
   </div>
 
   <ng-template #warning>

@@ -6,6 +6,7 @@ import {
   get,
   child,
   DatabaseReference,
+  remove,
 } from 'firebase/database';
 import { AppError } from '../errors.model';
 
@@ -63,6 +64,21 @@ class DbFirebase {
           errorType: 'Network Error',
         } as AppError;
       });
+  }
+
+  deleteData(endpoint: string, id: string, cb?: () => void) {
+    const errorHandler = (error: any) => {
+      console.log('Delete data error: ', error.message);
+      return {
+        type: 'AppError',
+        message: 'Delete data error: ' + error.message,
+        errorType: 'Network Error',
+      } as AppError;
+    };
+
+    remove(ref(this.db, `${endpoint}/${id}`))
+      .then(cb)
+      .catch(errorHandler);
   }
 }
 
