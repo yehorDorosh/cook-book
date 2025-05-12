@@ -3,10 +3,19 @@
 
   <ul>
     <li *ngFor="let ingredient of shopListFlat">
-      <p>
-        {{ ingredient.name }} - {{ ingredient.amount.value }}
-        {{ ingredient.amount.unit }}
-      </p>
+      <div class="checkbox" [class]="{ 'crossed-out': ingredient.checked }">
+        <label>
+          <input
+            type="checkbox"
+            (change)="onCheck($event, ingredient.ing.id)"
+          />
+          <p>
+            {{ ingredient.ing.name }} -
+            {{ ingredient.ing.amount.value }}
+            {{ ingredient.ing.amount.unit }}
+          </p>
+        </label>
+      </div>
     </li>
   </ul>
 </div>

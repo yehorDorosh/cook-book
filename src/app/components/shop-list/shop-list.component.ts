@@ -11,7 +11,7 @@ import { NgFor, NgIf } from '@angular/common';
 })
 export class ShopListComponent implements OnChanges {
   @Input() checkedList: { [key: string]: Recipe } = {};
-  shopList: { [key: string]: Ingredient } = {};
+  shopList: { [key: string]: { ing: Ingredient; checked: boolean } } = {};
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['checkedList']) {
@@ -27,16 +27,20 @@ export class ShopListComponent implements OnChanges {
           const ingredient = recipeList[recipeId].ingredients[ingredientId];
 
           const matchIngredient = Object.values(this.shopList).find(
-            (_) => ingredient.name === _.name
+            (_) => ingredient.name === _.ing.name
           );
 
           if (
             matchIngredient &&
-            matchIngredient.amount.unit === ingredient.amount.unit
+            matchIngredient.ing.amount.unit === ingredient.amount.unit
           ) {
-            matchIngredient.amount.value += ingredient.amount.value;
+            matchIngredient.ing.amount.value += ingredient.amount.value;
           } else {
-            this.shopList[ingredientId] = structuredClone(ingredient);
+            const newListItem = {
+              ing: structuredClone(ingredient),
+              checked: false,
+            };
+            this.shopList[ingredientId] = newListItem;
           }
         }
       }
@@ -45,7 +49,17 @@ export class ShopListComponent implements OnChanges {
 
   get shopListFlat() {
     return Object.values(this.shopList).sort((a, b) => {
-      return a.name.localeCompare(b.name);
+      return a.ing.name.localeCompare(b.ing.name);
     });
+  }
+
+  onCheck(event: Event, id: string) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      this.shopList[id].checked = true;
+    } else {
+      this.shopList[id].checked = false;
+    }
   }
 }

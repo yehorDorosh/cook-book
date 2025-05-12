@@ -1,9 +1,10 @@
 <app-layout-main>
   <app-login-form *ngIf="!isLoggedIn"></app-login-form>
+
+  <app-shop-list [checkedList]="checkedList"></app-shop-list>
+
   <app-recipes-list
     [list]="recipes"
     (onAddIngredientsToList)="onAddIngredientsToList($event)"
   ></app-recipes-list>
-
-  <app-shop-list [checkedList]="checkedList"></app-shop-list>
 </app-layout-main>
