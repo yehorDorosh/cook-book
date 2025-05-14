@@ -15,7 +15,7 @@
       <ul>
         <li *ngFor="let step of recipes[recipeId].steps">
           <h3>{{ step.number + 1 }}. {{ step.title }}</h3>
-          <p>{{ step.description }}</p>
+          <p class="descripton">{{ step.description }}</p>
         </li>
       </ul>
     </div>
