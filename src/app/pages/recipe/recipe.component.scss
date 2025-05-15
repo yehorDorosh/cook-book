@@ -6,3 +6,12 @@
 .descripton {
   white-space: pre-wrap;
 }
+
+.steps {
+  margin: 0;
+  padding: 0;
+
+  & .step {
+    list-style: none;
+  }
+}
