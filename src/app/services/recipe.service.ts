@@ -8,6 +8,7 @@ import { isAppError } from '../utils/errors.model';
 import { UserService } from './user.service';
 import { Endpoints } from '../utils/firebase/api.model';
 import { IngredientsResponse } from '../components/ingredient-form/ingredient.model';
+import { IngredientService } from './ingredient.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,10 @@ import { IngredientsResponse } from '../components/ingredient-form/ingredient.mo
 export class RecipeService {
   recipes: RecipeResponse | null = null;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private ingredientService: IngredientService
+  ) {
     this.userService.onUserUpd.subscribe((user) => {
       this.getRecipes();
     });
@@ -63,6 +67,13 @@ export class RecipeService {
       for (const recipeId in this.recipes) {
         const recipe = this.recipes[recipeId];
         Object.assign(ingredientsGlobal, recipe.ingredients);
+      }
+
+      if (this.ingredientService.customIngredients) {
+        Object.assign(
+          ingredientsGlobal,
+          this.ingredientService.customIngredients
+        );
       }
 
       return ingredientsGlobal;

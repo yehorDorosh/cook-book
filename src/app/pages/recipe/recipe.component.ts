@@ -18,7 +18,11 @@ export class RecipeComponent {
   constructor(private recipeService: RecipeService, private router: Router) {}
 
   get ingredientsList() {
-    if (this.recipes) {
+    if (
+      this.recipes &&
+      this.recipes[this.recipeId] &&
+      this.recipes[this.recipeId].ingredients
+    ) {
       return Object.values(this.recipes[this.recipeId].ingredients);
     }
     return null;

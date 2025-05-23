@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Recipe } from '../create-recipe/recipe.model';
 import { Ingredient, units } from '../ingredient-form/ingredient.model';
 import { NgFor, NgIf } from '@angular/common';
+import { IngredientService } from '../../services/ingredient.service';
 
 @Component({
   selector: 'app-shop-list',
@@ -13,6 +14,8 @@ export class ShopListComponent implements OnChanges {
   @Input() checkedList: { [key: string]: Recipe } = {};
   shopList: { [key: string]: { ing: Ingredient; checked: boolean } } = {};
 
+  constructor(private ingredientsService: IngredientService) {}
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['checkedList']) {
       this.shopList = {};
@@ -20,11 +23,21 @@ export class ShopListComponent implements OnChanges {
         [key: string]: Recipe;
       };
 
+      const recipesKeys = Object.keys(recipeList);
+      const lastRecipe = recipesKeys.at(-1);
+
       for (const recipeId in recipeList) {
         const recipe = recipeList[recipeId];
+        const ingredients =
+          recipeId === lastRecipe
+            ? {
+                ...recipe.ingredients,
+                ...this.ingredientsService.customIngredients,
+              }
+            : recipe.ingredients;
 
-        for (const ingredientId in recipe.ingredients) {
-          const ingredient = recipeList[recipeId].ingredients[ingredientId];
+        for (const ingredientId in ingredients) {
+          const ingredient = ingredients[ingredientId];
 
           const matchIngredient = Object.values(this.shopList).find(
             (_) => ingredient.name === _.ing.name

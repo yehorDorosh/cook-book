@@ -1,0 +1,10 @@
+<ul class="custom-ingredient-list">
+  <li *ngFor="let ingredient of customIngredientList">
+    <app-ingredient-form
+      [isCustomIngredient]="true"
+      [ingredient]="ingredient"
+      [id]="ingredient.id"
+      (deleteBtn)="onDelete($event)"
+    ></app-ingredient-form>
+  </li>
+</ul>

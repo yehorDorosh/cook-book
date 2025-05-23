@@ -54,7 +54,7 @@ export class CreateRecipeComponent implements OnInit {
       }
 
       this.recipeTitleInput = this.recipe.title;
-      this.recipe.steps.forEach((step) => {
+      this.recipe.steps?.forEach((step) => {
         this.registerStep(step.number);
         this.stepsRefs[step.number]?.setInput('title', step.title);
         this.stepsRefs[step.number]?.setInput('description', step.description);

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutMainComponent } from '../../components/layout/layout-main/layout-main.component';
 import { RecipesListComponent } from '../../components/recipes-list/recipes-list.component';
-import { API_MOCKS } from '../../utils/mocks/api';
 import { type Recipe } from '../../components/create-recipe/recipe.model';
 import { ShopListComponent } from '../../components/shop-list/shop-list.component';
 import { LoginFormComponent } from '../../components/auth/login-form/login-form.component';

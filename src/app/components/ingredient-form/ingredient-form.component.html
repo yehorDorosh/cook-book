@@ -1,4 +1,4 @@
-<form class="form">
+<form *ngIf="isLoggedIn" class="form">
   <div class="form-group">
     <label [for]="'ingredient' + id">Ingredient</label>
     <input
@@ -35,15 +35,33 @@
       #unitSelectRef
       class="form-control"
       [id]="'unit' + id"
+      [name]="unitSelect + id"
+      [(ngModel)]="defaultUnit"
       (change)="onUnitSelect($event)"
     >
-      <option *ngFor="let unit of units" [selected]="unit === defaultUnit">
+      <option *ngFor="let unit of units" [value]="unit">
         {{ unit }}
       </option>
     </select>
   </div>
 
-  <button type="button" class="btn btn-danger" (click)="onDelete($event)">
+  <button
+    *ngIf="id"
+    type="button"
+    class="btn btn-danger"
+    (click)="onDelete($event)"
+  >
     Delete
   </button>
+
+  <button
+    *ngIf="isCustomIngredient && !isLoading"
+    type="button"
+    class="btn btn-primary"
+    (click)="onSubmit()"
+  >
+    Save
+  </button>
+
+  <span *ngIf="isLoading">Is Loading...</span>
 </form>

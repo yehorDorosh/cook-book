@@ -28,7 +28,11 @@ export class RecipesListComponent implements OnChanges {
   } = {};
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.recipesFlat = Object.values(changes['list'].currentValue);
+    this.recipesFlat = (
+      Object.values(changes['list'].currentValue) as Recipe[]
+    ).sort((a, b) => {
+      return a.title.localeCompare(b.title);
+    });
   }
 
   onCheck(event: Event, id: string) {
