@@ -40,7 +40,9 @@ export class ShopListComponent implements OnChanges {
           const ingredient = ingredients[ingredientId];
 
           const matchIngredient = Object.values(this.shopList).find(
-            (_) => ingredient.name === _.ing.name
+            (_) =>
+              ingredient.name === _.ing.name &&
+              ingredient.amount.unit === _.ing.amount.unit
           );
 
           if (
